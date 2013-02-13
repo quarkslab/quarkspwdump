@@ -1,0 +1,24 @@
+________                          __            __________          ________
+\_____  \   __ __ _____  _______ |  | __  ______\______   \__  _  __\______ \   __ __   _____  ______
+ /  / \  \ |  |  \\__  \ \_  __ \|  |/ / /  ___/ |     ___/\ \/ \/ / |    |  \ |  |  \ /     \ \____ \
+/   \_/.  \|  |  / / __ \_|  | \/|    <  \___ \  |    |     \     /  |    `   \|  |  /|  Y Y  \|  |_> >
+\_____\ \_/|____/ (____  /|__|   |__|_ \/____  > |____|      \/\_/  /_______  /|____/ |__|_|  /|   __/
+       \__>            \/             \/     \/                             \/              \/ |__|
+                                                                           v0.2b -<(QuarksLab)>-
+
+											CHANGELOG
+
+v0.2 - XX-05-2012
+-----------------
+ - Short command flags are available, check README.txt
+ - NTDS.dit file could be specified at any position but -nt flag must be used now
+ - README updated for ntds.dit backup on Win 2003 operating systems
+											
+v0.1b - 14-05-2012
+------------------
+ - Initial release
+ - Local account + history dump
+ - Cached domain hash dump
+ - NTDS Domain hashes dump
+ - NTDS Bitlocker information dump
+ 

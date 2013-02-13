@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuarksPwDump", "src\QuarksADDumper.vcxproj", "{E0362605-CC11-4CD5-AFF7-B50934438658}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E0362605-CC11-4CD5-AFF7-B50934438658}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E0362605-CC11-4CD5-AFF7-B50934438658}.Debug|Win32.Build.0 = Debug|Win32
+		{E0362605-CC11-4CD5-AFF7-B50934438658}.Release|Win32.ActiveCfg = Release|Win32
+		{E0362605-CC11-4CD5-AFF7-B50934438658}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
