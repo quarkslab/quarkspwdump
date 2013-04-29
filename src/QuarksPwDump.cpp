@@ -64,7 +64,7 @@ BOOL ParseCommandLine(int argc, TCHAR* argv[]) {
 			OPT_DUMP_HASH_LOCAL = TRUE;
 		else if((!strcmp(argv[i],"--dump-hash-domain-cached")) || (!strcmp(argv[i],"-dhdc")))
 			OPT_DUMP_HASH_DOMAIN_CACHED = TRUE;
-		else if((!strcmp(argv[i],"--dump-hash-domain")) || (!strcmp(argv[i],"--dhd")))
+		else if((!strcmp(argv[i],"--dump-hash-domain")) || (!strcmp(argv[i],"-dhd")))
 			OPT_DUMP_HASH_DOMAIN = TRUE;
 		else if((!strcmp(argv[i],"--dump-bitlocker")) || (!strcmp(argv[i],"-db")))
 			OPT_DUMP_BITLOCKER = TRUE;
