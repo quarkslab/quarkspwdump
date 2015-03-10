@@ -58,17 +58,21 @@ Do not forget to always put NTDS.dit filepath at the end of the command line for
 Some command examples:
 
  - Dump domain hashes from NTDS.dit with its history
-```sh
-   # quarks-pwdump.exe --dump-hash-domain --with-history
+```console
+   > quarks-pwdump.exe --dump-hash-domain --with-history
 ```
 
 - Dump local account hashes to LC format
-   #quarks-pwdump.exe --dump-hash-local --output-type LC
-   
-- Dump domain hashes from NTDS.dit with its history
-   #quarks-pwdump.exe --dump-bitlocker --output c:\bitlocker.txt --ntds-file c:\ntds.dit
+```console
+   > quarks-pwdump.exe --dump-hash-local --output-type LC
+```
 
-All features require administrator privileges.
+- Dump domain hashes from NTDS.dit with its history
+```console
+   > quarks-pwdump.exe --dump-bitlocker --output c:\bitlocker.txt --ntds-file c:\ntds.dit
+```
+
+All online hash dump features require administrator privileges. NTDS.dit hash dumps with an offline SYSTEM hive can be performed with any user privileges.
 
 
 2 / TECHNICAL APPROACH
