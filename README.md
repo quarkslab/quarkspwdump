@@ -58,7 +58,9 @@ Do not forget to always put NTDS.dit filepath at the end of the command line for
 Some command examples:
 
  - Dump domain hashes from NTDS.dit with its history
-   #quarks-pwdump.exe --dump-hash-domain --with-history
+```sh
+   # quarks-pwdump.exe --dump-hash-domain --with-history
+```
 
 - Dump local account hashes to LC format
    #quarks-pwdump.exe --dump-hash-local --output-type LC
