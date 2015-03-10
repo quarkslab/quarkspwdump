@@ -211,7 +211,7 @@ int SAM_ParseAllAccount(ll_localAccountInfo *localAccountInfo,BOOL with_history)
 			}
 
 			/* Extract scrambled ciphered NT/LM struct */
-			if(!(localAccountEntry.V = (LPBYTE)VirtualAlloc(NULL,localAccountEntry.dwVSize,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE))) {
+			if(!(localAccountEntry.V = (LPBYTE)malloc(localAccountEntry.dwVSize))) {
 				retCode = SAM_MEM_ERROR;
 				break;
 			}
@@ -225,7 +225,7 @@ int SAM_ParseAllAccount(ll_localAccountInfo *localAccountInfo,BOOL with_history)
 			/* Check for history if asked */
 			localAccountEntry.nbHistoryEntries = (((*(LPWORD)(tmp+0xC4))-4) / WIN_NTLM_HASH_SIZE) + 1;  /* +1 = FIX  for strange MS behavior (see crypt.cpp)*/
 			if(with_history && (localAccountEntry.nbHistoryEntries!=0)) {
-				localAccountEntry.NTLM_hash_history = (s_NTLM_Hash *)VirtualAlloc(NULL,localAccountEntry.nbHistoryEntries*sizeof(s_NTLM_Hash),MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE);
+				localAccountEntry.NTLM_hash_history = (s_NTLM_Hash *)malloc(localAccountEntry.nbHistoryEntries*sizeof(s_NTLM_Hash));
 			}
 
 			/* Check main hash type (TO fix see crypt.cpp) */
@@ -346,7 +346,7 @@ int SAM_ParseAllCachedAccount(ll_cachedAccountInfo *cachedAccountInfo) {
 				break;
 			}
 
-			if(!(cachedAccountEntry.cachedEntry = (LPBYTE)VirtualAlloc(NULL,dwValSize,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE))) {
+			if(!(cachedAccountEntry.cachedEntry = (LPBYTE)malloc(dwValSize))) {
 				retCode = SAM_MEM_ERROR;
 				break;
 			}

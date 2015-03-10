@@ -4,7 +4,6 @@
 // http://www.matcode.com
 // Author: Vitaly Evseenko
 // E-Mail: ve@matcode.com
-// Hack: Nadeem Douba
 //-----------------------------------------------------------
 
 #define ID_regf		0x66676572

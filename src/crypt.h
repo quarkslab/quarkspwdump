@@ -87,6 +87,7 @@
  *  BOOTKEY is used for local account only
  *  SYSKEY is used a bit everywhere :)
  */
+int CRYPT_SyskeyGetOfflineValue(s_SYSKEY *pSyskey, LPTSTR hiveFileName);
 int CRYPT_SyskeyGetValue(s_SYSKEY *pSyskey);
 int CRYPT_BootkeyGetValue(s_BOOTKEY_ciphered *bootkey_ciphered,s_BOOTKEY *bootkey);
 int CRYPT_LsakeyGetValue(s_LSAKEY *lsakey,s_LSAKEY_ciphered *lsakey_ciphered,s_SYSKEY *syskey);

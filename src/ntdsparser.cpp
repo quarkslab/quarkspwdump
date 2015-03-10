@@ -67,14 +67,14 @@ BOOL NTDS_OpenDatabase(s_parser *parser,LPCSTR szNtdsPath) {
 		return FALSE;
 	}
 
-	jet_err = JetAttachDatabase(parser->sesid,parser->parsed_filename,JET_bitDbReadOnly);
+	jet_err = JetAttachDatabase(parser->sesid,parser->parsed_filename, JET_bitDbReadOnly);
 	if(jet_err!=JET_errSuccess) {
 		NTDS_ErrorPrint(parser,"JetAttachDatabase",jet_err);
 		JetEndSession(parser->sesid,0);
 		return FALSE;
 	}
 
-	jet_err = JetOpenDatabase(parser->sesid,parser->parsed_filename,szConnect,&parser->dbid,JET_bitDbReadOnly);
+	jet_err = JetOpenDatabase(parser->sesid,parser->parsed_filename,szConnect,&parser->dbid, JET_bitDbReadOnly);
 	if(jet_err!=JET_errSuccess) {
 		NTDS_ErrorPrint(parser,"JetOpenDatabase",jet_err);
 		JetEndSession(parser->sesid,0);
@@ -127,8 +127,8 @@ JET_ERR NTDS_GetRecord(s_parser *parser,JET_TABLEID tableid,JET_COLUMNID columni
 	if(!val)
 		return JET_errSuccess;
 
-	if((*val_size) && jet_err != JET_errSuccess) {
-		jet_err =  JetRetrieveColumn(parser->sesid,tableid,columnid,val,*val_size,val_size,0,NULL);
+	if ((*val_size) && jet_err != JET_errSuccess) {
+		jet_err = JetRetrieveColumn(parser->sesid, tableid, columnid, val, *val_size, val_size, 0, NULL);
 	}
 
 	return jet_err;
@@ -154,7 +154,7 @@ int NTDS_NTLM_ParseSAMRecord(s_parser *parser,JET_TABLEID tableid,s_ldapAccountI
 	if((jet_err==JET_errSuccess)&&(attributeSize==sizeof(ldapAccountEntry->szSAMAccountType))) {
 		ldapAccountEntry->szSAMAccountType = *(LPDWORD)attributeVal;
 	} 
-	else
+	else 
 		return NTDS_BAD_RECORD;
 
 	if((ldapAccountEntry->szSAMAccountType != SAM_USER_OBJECT) && 
@@ -196,8 +196,8 @@ int NTDS_NTLM_ParseSAMRecord(s_parser *parser,JET_TABLEID tableid,s_ldapAccountI
 		/* Get LM hash history */
 		jet_err = NTDS_GetRecord(parser,tableid,parser->columndef[ID_LM_HASH_HISTORY].columnid,NULL,&attributeSize);
 		if(jet_err==JET_errSuccess && attributeSize) {
-			ldapAccountEntry->LM_history_ciphered = (LPBYTE)VirtualAlloc(NULL,attributeSize,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE);
-			ldapAccountEntry->LM_history_deciphered = (LPBYTE)VirtualAlloc(NULL,attributeSize,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE);
+			ldapAccountEntry->LM_history_ciphered = (LPBYTE)malloc(attributeSize);
+			ldapAccountEntry->LM_history_deciphered = (LPBYTE)malloc(attributeSize);
 			if(!ldapAccountEntry->LM_history_ciphered || !ldapAccountEntry->LM_history_deciphered)
 				return NTDS_MEM_ERROR;
 			jet_err = NTDS_GetRecord(parser,tableid,parser->columndef[ID_LM_HASH_HISTORY].columnid,ldapAccountEntry->LM_history_ciphered,&attributeSize);
@@ -209,8 +209,8 @@ int NTDS_NTLM_ParseSAMRecord(s_parser *parser,JET_TABLEID tableid,s_ldapAccountI
 		/* Get NT hash history */
 		jet_err = NTDS_GetRecord(parser,tableid,parser->columndef[ID_NT_HASH_HISTORY].columnid,NULL,&attributeSize);
 		if(jet_err==JET_errSuccess && attributeSize) {
-			ldapAccountEntry->NT_history_ciphered = (LPBYTE)VirtualAlloc(NULL,attributeSize,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE);
-			ldapAccountEntry->NT_history_deciphered = (LPBYTE)VirtualAlloc(NULL,attributeSize,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE);
+			ldapAccountEntry->NT_history_ciphered = (LPBYTE)malloc(attributeSize);
+			ldapAccountEntry->NT_history_deciphered = (LPBYTE)malloc(attributeSize);
 			if(!ldapAccountEntry->NT_history_ciphered || !ldapAccountEntry->NT_history_deciphered)
 				return NTDS_MEM_ERROR;
 			jet_err = NTDS_GetRecord(parser,tableid,parser->columndef[ID_NT_HASH_HISTORY].columnid,ldapAccountEntry->NT_history_ciphered,&attributeSize);
@@ -220,7 +220,7 @@ int NTDS_NTLM_ParseSAMRecord(s_parser *parser,JET_TABLEID tableid,s_ldapAccountI
 
 		if(ldapAccountEntry->LM_history_ciphered && ldapAccountEntry->NT_history_ciphered) {
 			ldapAccountEntry->nbHistoryEntries = (attributeSize - 24) / WIN_NTLM_HASH_SIZE;
-			if(!(ldapAccountEntry->NTLM_hash_history = (s_NTLM_Hash *)VirtualAlloc(NULL,ldapAccountEntry->nbHistoryEntries*sizeof(s_NTLM_Hash),MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE)))
+			if(!(ldapAccountEntry->NTLM_hash_history = (s_NTLM_Hash *)malloc(ldapAccountEntry->nbHistoryEntries*sizeof(s_NTLM_Hash))))
 				return NTDS_MEM_ERROR;
 			ldapAccountEntry->NT_history_ciphered_size = attributeSize;
 		}
@@ -230,7 +230,7 @@ int NTDS_NTLM_ParseSAMRecord(s_parser *parser,JET_TABLEID tableid,s_ldapAccountI
 	attributeSize = sizeof(attributeVal);
 	jet_err = NTDS_GetRecord(parser,tableid,parser->columndef[ID_OBJECT_SID].columnid,attributeVal,&attributeSize);
 	if(jet_err==JET_errSuccess) {
-		ldapAccountEntry->sid = (PSID)VirtualAlloc(NULL,attributeSize,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE);
+		ldapAccountEntry->sid = (PSID)malloc(attributeSize);
 		if(!ldapAccountEntry->sid)
 			return NTDS_MEM_ERROR;
 		RtlMoveMemory(ldapAccountEntry->sid,attributeVal,attributeSize-sizeof(ldapAccountEntry->rid));
@@ -380,7 +380,7 @@ int NTDS_Bitlocker_ParseRecord(s_parser *parser,JET_TABLEID tableid,s_bitlockerA
 	attributeSize = sizeof(attributeVal);
 	jet_err = NTDS_GetRecord(parser,tableid,parser->columndef[ID_MSFVE_KEY_PACKAGE].columnid,attributeVal,&attributeSize);
 	if((jet_err==JET_errSuccess) && attributeSize) {
-		bitlockerAccountEntry->msFVE_KeyPackage = (LPBYTE)VirtualAlloc(NULL,attributeSize,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE);
+		bitlockerAccountEntry->msFVE_KeyPackage = (LPBYTE)malloc(attributeSize);
 		if(!bitlockerAccountEntry->msFVE_KeyPackage)
 			return NTDS_MEM_ERROR;
 		RtlMoveMemory(bitlockerAccountEntry->msFVE_KeyPackage,attributeVal,attributeSize);

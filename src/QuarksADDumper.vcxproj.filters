@@ -39,6 +39,9 @@
     <ClInclude Include="samparser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="loadhive.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="crypt.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QuarksPwDump.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="loadhive.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
