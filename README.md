@@ -59,17 +59,17 @@ Some command examples:
 
  - Dump domain hashes from NTDS.dit with its history
 ```console
-   > quarks-pwdump.exe --dump-hash-domain --with-history
+	C:\> quarks-pwdump.exe --dump-hash-domain --with-history
 ```
 
 - Dump local account hashes to LC format
 ```console
-   > quarks-pwdump.exe --dump-hash-local --output-type LC
+	C:\> quarks-pwdump.exe --dump-hash-local --output-type LC
 ```
 
 - Dump domain hashes from NTDS.dit with its history
 ```console
-   > quarks-pwdump.exe --dump-bitlocker --output c:\bitlocker.txt --ntds-file c:\ntds.dit
+	C:\> quarks-pwdump.exe --dump-bitlocker --output c:\bitlocker.txt --ntds-file c:\ntds.dit
 ```
 
 All online hash dump features require administrator privileges. NTDS.dit hash dumps with an offline SYSTEM hive can be performed with any user privileges.
@@ -113,15 +113,15 @@ filesystem snapshots while the operating is running and writing to current backu
 
 Here is a way to backup NTDS.dit file while a domain controller is running:
 
- #ntdsutil
- #snapshot
- #activate instance ntds
- #create
- #mount {GUID}
- #copy c:\MOUNT_POINT\WINDOWS\NTDS\NTDS.dit c:\NTDS_saved.dit
- #unmount {GUID}
- #quit
- #quit
+``` console
+	C:\> ntdsutil
+	ntdsutil: activate instance ntds
+	ntdsutil: ifm
+	ifm: create full c:\pentest
+	ifm: quit
+	ntdsutil: quit
+	C:\>
+```
 
 If AD server hasn't the "AD DS role", you have to use dsdbutil.exe command in the same way.
 
@@ -142,7 +142,9 @@ But you can use ntbackup tool, here is the procedure:
 - Validate and wait some minutes
 - Open a command shell to "c:\tmp\Active Directory"
 - We need to repair the database with this command 
- #esentutl /p ntds.dit
+```console
+	C:\> esentutl /p ntds.dit
+```
 - Validate warning and wait some minutes
 
 ntds.dit file can now be used with quarkspwdump.
@@ -157,7 +159,6 @@ ntds.dit file can now be used with quarkspwdump.
  - Use VSS COMM API to directly copy NTDS.dit file from our tool
  - Make tests on more environments with different configuration (NTLM storage GP, history size...)
  - Parsing specific Bitlocker TPM owner information in NTDS.dit
- - Make the tool working full offline (from mounted image disk for example)
  
 
 contact@quarkslab.com
