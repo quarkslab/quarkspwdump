@@ -90,6 +90,15 @@ BOOL ParseCommandLine(int argc, TCHAR* argv[]) {
 			else
 				return FALSE;
 		}
+		else if ((!strcmp(argv[i], "--system-file")) || (!strcmp(argv[i], "-sf"))){
+			if ((i + 1) < argc) {
+				lstrcpyn(OPT_SYSTEM_FILENAME, argv[i + 1], MAX_PATH);
+				i++;
+				OPT_WITH_SYSTEM_FILE = TRUE;
+			}
+			else
+				return FALSE;
+		}
 		else if((!strcmp(argv[i],"--output")) || (!strcmp(argv[i],"-o"))){
 			if((i+1) < argc) {
 				lstrcpyn(OPT_OUTPUT_FILENAME,argv[i+1],MAX_PATH);
@@ -140,8 +149,8 @@ BOOL CommandDispatcher() {
 
 	/* Get SYSKEY (for domain hash dump only) */
 	if(OPT_DUMP_HASH_DOMAIN || OPT_DUMP_HASH_DOMAIN_CACHED) {
-		printf("[+] SYSKEY restrieving...");
-		ret_code = CRYPT_SyskeyGetValue(&SYSKEY);
+		printf("[+] SYSKEY restrieving...");		
+		ret_code = (OPT_WITH_SYSTEM_FILE)?CRYPT_SyskeyGetOfflineValue(&SYSKEY, OPT_SYSTEM_FILENAME) : CRYPT_SyskeyGetValue(&SYSKEY);
 		if(ret_code==SYSKEY_SUCCESS) {
 			puts("[OK]");
 			SYSKEY_Dump(&SYSKEY);

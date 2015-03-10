@@ -132,7 +132,7 @@ BOOL RegGetValueEx(HKEY hKeyReg,LPSTR keyName,LPSTR valueName,LPDWORD type,LPVOI
 ll_ldapAccountInfo ldapAccountInfoNew(ll_ldapAccountInfo *ldapAccountInfo,s_ldapAccountInfo *ldapAccountEntry) {
 	ll_ldapAccountInfo newEntry;
 
-	if(!(newEntry = (ll_ldapAccountInfo)VirtualAlloc(NULL,sizeof(l_ldapAccountInfo),MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE)))
+	if(!(newEntry = (ll_ldapAccountInfo)malloc(sizeof(l_ldapAccountInfo))))
 		return NULL;
 
 	newEntry->next = *ldapAccountInfo;
@@ -154,10 +154,10 @@ BOOL ldapAccountInfoFreeAll(ll_ldapAccountInfo ldapAccountInfo) {
 		do {
 			tmp = current->next;
 			if(current->info.sid)
-				VirtualFree(current->info.sid,0,MEM_RELEASE);
+				free(current->info.sid);
 			if(current->info.NTLM_hash_history)
-				VirtualFree(current->info.NTLM_hash_history,0,MEM_RELEASE);
-			VirtualFree(current,0,MEM_RELEASE);
+				free(current->info.NTLM_hash_history);
+			free(current);
 			current = tmp;
 		}while(current);
 	}
@@ -172,7 +172,7 @@ BOOL ldapAccountInfoFreeAll(ll_ldapAccountInfo ldapAccountInfo) {
 ll_localAccountInfo localAccountInfoNew(ll_localAccountInfo *localAccountInfo,s_localAccountInfo *localAccountEntry) {
 	ll_localAccountInfo newEntry;
 
-	if(!(newEntry = (ll_localAccountInfo)VirtualAlloc(NULL,sizeof(l_localAccountInfo),MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE)))
+	if(!(newEntry = (ll_localAccountInfo)malloc(sizeof(l_localAccountInfo))))
 		return NULL;
 
 	newEntry->next = *localAccountInfo;
@@ -194,10 +194,10 @@ BOOL localAccountInfoFreeAll(ll_localAccountInfo localAccountInfo) {
 		do {
 			tmp = current->next;
 			if(current->info.V)
-				VirtualFree(current->info.V,0,MEM_RELEASE);
+				free(current->info.V);
 			if(current->info.NTLM_hash_history)
-				VirtualFree(current->info.NTLM_hash_history,0,MEM_RELEASE);
-			VirtualFree(current,0,MEM_RELEASE);
+				free(current->info.NTLM_hash_history);
+			free(current);
 			current = tmp;
 		}while(current);
 	}
@@ -213,7 +213,7 @@ BOOL localAccountInfoFreeAll(ll_localAccountInfo localAccountInfo) {
 ll_cachedAccountInfo cachedAccountInfoNew(ll_cachedAccountInfo *cachedAccountInfo,s_cachedAccountInfo *cachedAccountEntry) {
 	ll_cachedAccountInfo newEntry;
 
-	if(!(newEntry = (ll_cachedAccountInfo)VirtualAlloc(NULL,sizeof(l_cachedAccountInfo),MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE)))
+	if(!(newEntry = (ll_cachedAccountInfo)malloc(sizeof(l_cachedAccountInfo))))
 		return NULL;
 
 	newEntry->next = *cachedAccountInfo;
@@ -235,8 +235,8 @@ BOOL cachedAccountInfoFreeAll(ll_cachedAccountInfo cachedAccountInfo) {
 		do {
 			tmp = current->next;
 			if(current->info.cachedEntry)
-				VirtualFree(current->info.cachedEntry,0,MEM_RELEASE);
-			VirtualFree(current,0,MEM_RELEASE);
+				free(current->info.cachedEntry);
+			free(current);
 			current = tmp;
 		}while(current);
 	}
@@ -251,7 +251,7 @@ BOOL cachedAccountInfoFreeAll(ll_cachedAccountInfo cachedAccountInfo) {
 ll_bitlockerAccountInfo bitlockerAccountInfoNew(ll_bitlockerAccountInfo *bitlockerAccountInfo,s_bitlockerAccountInfo *bitlockerAccountEntry) {
 	ll_bitlockerAccountInfo newEntry;
 
-	if(!(newEntry = (ll_bitlockerAccountInfo)VirtualAlloc(NULL,sizeof(l_bitlockerAccountInfo),MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE)))
+	if(!(newEntry = (ll_bitlockerAccountInfo)malloc(sizeof(l_bitlockerAccountInfo))))
 		return NULL;
 
 	newEntry->next = *bitlockerAccountInfo;
@@ -273,8 +273,8 @@ BOOL bitlockerAccountInfoFreeAll(ll_bitlockerAccountInfo bitlockerAccountInfo) {
 		do {
 			tmp = current->next;
 			if(current->info.msFVE_KeyPackage)
-				VirtualFree(current->info.msFVE_KeyPackage,0,MEM_RELEASE);
-			VirtualFree(current,0,MEM_RELEASE);
+				free(current->info.msFVE_KeyPackage);
+			free(current);
 			current = tmp;
 		}while(current);
 	}

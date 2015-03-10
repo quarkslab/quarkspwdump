@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,12 +21,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -87,6 +89,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="crypt.h" />
     <ClInclude Include="globals.h" />
+    <ClInclude Include="loadhive.h" />
     <ClInclude Include="ntdsparser.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="samparser.h" />
@@ -95,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="crypt.cpp" />
+    <ClCompile Include="loadhive.cpp" />
     <ClCompile Include="ntdsparser.cpp" />
     <ClCompile Include="QuarksPwDump.cpp" />
     <ClCompile Include="samparser.cpp" />

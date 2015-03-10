@@ -1,5 +1,5 @@
 #include "crypt.h"
-
+#include "loadhive.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,6 +219,48 @@ BOOL SyskeyGetClassBytes(HKEY hKeyReg,LPSTR keyName,LPSTR valueName,LPBYTE class
 }
 
 
+
+
+
+int CRYPT_SyskeyGetOfflineValue(s_SYSKEY *pSyskey, LPTSTR hiveFileName) {
+	LONG WINAPI errorCode;
+	DWORD dwSecureBoot = 0;
+	HKEY hkey;
+	BYTE syskey[16];
+	BYTE syskeyPerm[16] = { 0x8, 0x5, 0x4, 0x2, 0xb, 0x9, 0xd, 0x3, 0x0, 0x6, 0x1, 0xc, 0xe, 0xa, 0xf, 0x7 };
+	int i;
+
+	if ((errorCode = LoadHive(hiveFileName)) != ERROR_SUCCESS)
+		return SYSKEY_REGISTRY_ERROR;	
+
+	if (!RegGetValueEx(HKEY_LOCAL_MACHINE, "OFFLINE_SYSTEM\\ControlSet001\\Control\\Lsa", "SecureBoot", NULL, &dwSecureBoot, sizeof(dwSecureBoot), NULL))
+		return SYSKEY_REGISTRY_ERROR;
+
+	if (dwSecureBoot != 1)
+		return SYSKEY_METHOD_NOT_IMPL;
+
+	if (!SyskeyGetClassBytes(HKEY_LOCAL_MACHINE, "OFFLINE_SYSTEM\\ControlSet001\\Control\\Lsa", "JD", syskey))
+		return SYSKEY_REGISTRY_ERROR;
+
+	if (!SyskeyGetClassBytes(HKEY_LOCAL_MACHINE, "OFFLINE_SYSTEM\\ControlSet001\\Control\\Lsa", "Skew1", syskey + 4))
+		return SYSKEY_REGISTRY_ERROR;
+
+	if (!SyskeyGetClassBytes(HKEY_LOCAL_MACHINE, "OFFLINE_SYSTEM\\ControlSet001\\Control\\Lsa", "GBG", syskey + 8))
+		return SYSKEY_REGISTRY_ERROR;
+
+	if (!SyskeyGetClassBytes(HKEY_LOCAL_MACHINE, "OFFLINE_SYSTEM\\ControlSet001\\Control\\Lsa", "Data", syskey + 12))
+		return SYSKEY_REGISTRY_ERROR;
+
+
+	for (i = 0; i<16; i++)
+		pSyskey->key[i] = syskey[syskeyPerm[i]];
+
+	UnloadHive();
+
+	return SYSKEY_SUCCESS;
+}
+
+
 /*
  * Get syskey raw bytes (length=16)
  * returns :
@@ -231,7 +273,7 @@ int CRYPT_SyskeyGetValue(s_SYSKEY *pSyskey) {
 	BYTE syskey[16];
 	BYTE syskeyPerm[16]={0x8,0x5,0x4,0x2,0xb,0x9,0xd,0x3,0x0,0x6,0x1,0xc,0xe,0xa,0xf,0x7};  
 	int i;
-
+	
 	if(!RegGetValueEx(HKEY_LOCAL_MACHINE,"SYSTEM\\CurrentControlSet\\Control\\Lsa","SecureBoot",NULL,&dwSecureBoot,sizeof(dwSecureBoot),NULL))
 		return SYSKEY_REGISTRY_ERROR;
 
@@ -636,7 +678,7 @@ int CRYPT_SAM_DecipherCachedAccount(s_cachedAccountInfo *cachedAccountEntry,s_NL
 		dwDomainFullSize = *(LPWORD)(cachedAccountEntry->cachedEntry+60);
 		RtlMoveMemory(hmac_msg,cachedAccountEntry->cachedEntry+64,sizeof(hmac_msg));
 
-		if(!(deciphered_data = (LPBYTE) VirtualAlloc(NULL,cachedAccountEntry->dwCachedEntrySize-96,MEM_COMMIT | MEM_RESERVE,PAGE_READWRITE))) {
+		if(!(deciphered_data = (LPBYTE) malloc(cachedAccountEntry->dwCachedEntrySize-96))) {
 			puts("Fatal error: not enough memory");
 			return CRYPT_MEM_ERROR;
 		}
@@ -661,7 +703,7 @@ int CRYPT_SAM_DecipherCachedAccount(s_cachedAccountInfo *cachedAccountEntry,s_NL
 		pCurElt += (dwDomainSize+(((dwDomainSize>>1)%2)<<1));
 		RtlMoveMemory(cachedAccountEntry->szFullDomain,pCurElt,dwDomainFullSize);
 
-		VirtualFree(deciphered_data,0,MEM_RELEASE);
+		free(deciphered_data);
 	}
 
 	return CRYPT_SUCCESS;
